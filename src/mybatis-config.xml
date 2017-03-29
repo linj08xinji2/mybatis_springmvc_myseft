@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-config.dtd">  
+<configuration> 
+<!-- 以下别名不填的，在usermapper.xml 写上parameterType="com.nc.mylover.bean.User"  --> 
+<!--     <typeAliases>
+  	   <package name="com.nc.mylover.bean"/>
+ 	</typeAliases> -->
+    <mappers>  
+  		 <mapper resource="com/nc/mylover/tables/UserMapper.xml" /> 
+    </mappers>  
+</configuration> 
