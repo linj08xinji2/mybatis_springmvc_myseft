@@ -10,16 +10,24 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <base href="<%=basePath%>">
     
     <title>welcome to mypage</title>
+   <link rel="stylesheet" type="text/css" href="http://www.w3cschool.cc/try/jeasyui/themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="http://www.w3cschool.cc/try/jeasyui/themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="http://www.w3cschool.cc/try/jeasyui/demo/demo.css">
+   
   </head>
   
   <body>
-   <form action="/mybatismvc/user/login" method="post">
-   		<br>用户账号：<input  type="text" name="account" value=""/>
-   		<br/>
-   		<br>用户密码：<input  type="text" name="password" value=""/>
-   		<br/>
-   		<br><input type="submit" value="提交" /> &nbsp;&nbsp;&nbsp;&nbsp;
-   		<input type="button" onclick="window.location.href='/mybatismvc/user/register'" value="注册sss" />
-   </form>
+  
+    <script type="text/javascript" language="javascript"  
+   src="<%=request.getContextPath()%>/js/My97DatePicker/WdatePicker.js">
+   </script>
+	<script src="<%=request.getContextPath()%>/js/jquery-3.1.1.min.js"></script>
+	<script src="<%=request.getContextPath()%>/js/jquery.validate.min.js"></script>
+	<script src="<%=request.getContextPath()%>/js/messages_zh.js"></script>
+	<script src="<%=request.getContextPath()%>/js/jquery-easyui-1.5.1/jquery.easyui.min.js"></script>
+	
+	
   </body>
+  
+  
 </html>

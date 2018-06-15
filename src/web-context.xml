@@ -24,10 +24,15 @@
 	
 	<!--一定要加上这个？？？？    -->
 	<bean id="iUserService" class="com.nc.mylover.service.UserServiceImpl"></bean>
-	
+   <bean id="iNCquery" class="com.nc.mylover.service.NCqueryImpl"></bean>
 	
     	<bean id="userDao" class="org.mybatis.spring.mapper.MapperFactoryBean">  
     	<property name="mapperInterface" value="com.nc.mylover.dao.UserDao" />  
+    	<property name="sqlSessionFactory" ref="sqlSessionFactory" />  
+	</bean>
+	
+	<bean id="ncDao" class="org.mybatis.spring.mapper.MapperFactoryBean">  
+    	<property name="mapperInterface" value="com.nc.mylover.dao.NCDao" />  
     	<property name="sqlSessionFactory" ref="sqlSessionFactory" />  
 	</bean>
 	
@@ -38,7 +43,7 @@
     </bean> 
  
     <!-- 配置DataSource数据源 -->
-    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+   <!--  <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="com.mysql.jdbc.Driver" />
         <property name="url" value="jdbc:mysql://localhost:3306/test?characterEncoding=utf-8" />
         <property name="username" value="root" />
@@ -49,7 +54,22 @@
 		<property name="defaultAutoCommit" value="true" />
 		<property name="removeAbandoned" value="true" />
 		<property name="removeAbandonedTimeout" value="60" />
+    </bean> -->
+ 
+   <!-- 配置DataSource数据源 -->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+        <property name="url" value="jdbc:oracle:thin:@192.168.9.18:1521:hdwydb" />
+        <property name="username" value="hddc_wy" />
+		<property name="password" value="Hddc_Wy_002" />
+		<property name="maxActive" value="5" />
+		<property name="maxIdle" value="3" />
+		<property name="maxWait" value="1000" />
+		<property name="defaultAutoCommit" value="true" />
+		<property name="removeAbandoned" value="true" />
+		<property name="removeAbandonedTimeout" value="60" />
     </bean>
+ 
  
     </beans>
     

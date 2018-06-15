@@ -8,5 +8,6 @@
  	</typeAliases> -->
     <mappers>  
   		 <mapper resource="com/nc/mylover/tables/UserMapper.xml" /> 
+  		 <mapper resource="com/nc/mylover/tables/ncMapper.xml" /> 
     </mappers>  
 </configuration> 
