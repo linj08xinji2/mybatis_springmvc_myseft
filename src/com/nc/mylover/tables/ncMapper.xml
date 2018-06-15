@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nc.mylover.dao.NCDao">
+
+<!-- resultType="nc.vo.cs.cs2210.NewReportVO" 返回实体类 -->
+<select id="getVO" resultMap="ncresutMap" >
+    select pk_newreport,vbillno,pk_corp from fdccs_bc_newreport
+    <where> pk_newreport in ('1147AA1000000000Q3TQ','1147A11000000000Q4LW')
+    </where>
+</select>
+
+<select id="getManagement"  resultType="nc.vo.cs.cs2210.BdManagementsecVO" >
+   select m.pk_managementsecid,m.vmanagementsecname,m.vmanagementseccode,m.pk_corp from
+  pr_bd_managementsec m 
+ where m.pk_corp='1012' and m.dr=0 
+ 
+</select>
+
+<!-- 传map参数过来 -->
+<select id="getVOMap" resultMap="ncresutMap"  parameterMap="parMap">
+    select pk_newreport,vbillno,pk_corp from fdccs_bc_newreport
+    <where> pk_corp = #{pk_corp} and dr=0 and dbilldate=#{pk_newreport}
+    </where>
+</select>
+
+
+<!-- 传多个参数一个一个过来   数组 -->
+<select id="getVOs" resultMap="ncresutMap" >
+    select pk_newreport,vbillno,pk_corp from fdccs_bc_newreport
+    <where> pk_corp = #{1} and dr=0 and dbilldate=#{0}
+    </where>
+</select>
+
+
+<!--返回类型  -->
+  <resultMap type="java.util.Map" id="ncresutMap">
+  <result property="pk_newreport" column="pk_newreport"/>
+    <result property="vbillno" column="vbillno"/>
+     <result property="pk_corp" column="pk_corp"/>
+  </resultMap>
+
+<!--参数类型  -->  
+    <parameterMap type="java.util.Map" id="parMap">
+   <parameter property="pk_newreport" javaType="java.lang.String"  />
+   <parameter property="pk_corp" javaType="java.lang.String"/>
+   <parameter property="num" javaType="java.lang.Integer"/>
+  </parameterMap>
+
+<!-- 报表  -->
+<select id="getdetailVOs" resultType="nc.vo.cs.cs2210.ReportDetailVO" parameterType="java.util.Map">
+	select m.vmanagementsecname, 
+	h.vhname ,
+	c.vcusname,
+	 c.vmobilephone ,
+      h.reserve2 ,
+      h.reserve3 ,
+       case
+         when rb.iscomplete = 'Y' then
+          '是'
+         else
+          '否'
+       end iscomplete ,
+       case 
+         when r.vremark=1 then 
+           '非常满意'
+         when r.vremark=2 then 
+           '比较满意'
+         when r.vremark=3 then 
+           '一般'
+         when r.vremark=4 then 
+           '不满意'
+         when r.vremark=5 then 
+           '很不满意'
+       end vremark,
+       r.vbillno ,
+       r.vdef7 ,
+      u.user_name ,
+       case 
+         when rb.ireportstatus=1 then
+         '物业维修'
+         when rb.ireportstatus=2 then
+         '责任施工单位维修'
+         when rb.ireportstatus=3 then
+         '关闭'
+       end ireportstatus,
+       r.dacceptdate ,
+       rb.vdef2 ,
+       rb.vdef10 ,
+       rb.vreportcontent ,
+       rb.vdef3 ,
+       ru.vname sgvname ,
+       rb.vdef1 ,
+       v.vname mainproblem,
+	   vb.vname ,  
+	   rb.price,
+	    rb.quantities ,
+       vb.unit ,
+       round(rb.price*round(rb.quantities,3)*replace(rb.vdef1,'%','')/100,2) coutprice,
+       r.vdef1 vmemo
+	from hddc_wy.fdccs_bc_newreport r
+	left join hddc_wy.fdccs_bc_newreport_b rb on r.pk_newreport =
+	rb.pk_newreport
+	and rb.dr = 0
+	left join hddc_wy.pr_bd_managementsec m on r.pk_managementsecid =
+	m.pk_managementsecid
+	left join hddc_wy.crm_bd_house h on r.pk_houseid = h.pk_house
+	left join hddc_wy.sm_user u on r.vacceptpsnid = u.cuserid
+	left join hddc_wy.fdccs_bc_repair_unit ru on rb.pk_repair_unit =
+	ru.pk_repair_unit
+	left join hddc_wy.fdccs_bd_visa v on rb.pk_visa = v.pk_visa
+	left join hddc_wy.fdccs_bd_visa_b vb on rb.pk_visa_b = vb.pk_visa_b
+	left join hddc_wy.pr_bd_customer c on r.pk_customerid=c.pk_customerid
+	where r.dr = 0
+	and nvl(m.dr, 0) = 0
+	and nvl(h.dr, 0) = 0
+	and r.pk_managementsecid = #{pk_managementsecid}
+	and nvl(r.vremark, '0') <![CDATA[<> ]]> #{vremark}
+	and nvl(r.dcheckdate,'2099-12-31')  <![CDATA[>= ]]>  nvl(#{dcheckdatebegin},'1900-01-01')
+	and nvl(r.dcheckdate,'1900-01-01') <![CDATA[ <= ]]>  nvl(#{dcheckdateend},'2099-12-31')
+	and nvl(r.ddealdate,'2099-12-31')  <![CDATA[>=]]>  nvl(#{ddealdatebegin},'1900-01-01')
+	and nvl(r.ddealdate,'1900-01-01')  <![CDATA[<= ]]>  nvl(#{ddealdateend},'2099-12-31')
+	and r.vbillno not in
+	(select distinct r.vbillno
+	from hddc_wy.fdccs_bc_newreport r
+	left join hddc_wy.fdccs_bc_newreport_b rb on r.pk_newreport =
+	rb.pk_newreport
+	and rb.dr = 0
+	where nvl(rb.iscomplete, 'N') = 'N'
+	and nvl(rb.ireportstatus,0)<![CDATA[<> ]]>3 and r.pk_managementsecid =
+	#{pk_managementsecid})
+	and nvl(rb.ireportstatus,0)<![CDATA[<> ]]>3
+</select>
+
+
+
+</mapper>
